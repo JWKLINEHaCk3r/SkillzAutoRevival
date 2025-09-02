@@ -83,6 +83,16 @@ document.querySelectorAll('.service-card, .testimonial').forEach(el => {
     observer.observe(el);
 });
 
+/* Fix floating logo click issue */
+document.querySelector('.floating-logo').addEventListener('click', () => {
+    window.location.href = '#hero';
+});
+
+/* Fix floating logo click issue */
+document.querySelector('.floating-logo').addEventListener('click', () => {
+    window.location.href = '#hero';
+});
+
 // Header background change on scroll with smooth transition
 window.addEventListener('scroll', () => {
     const header = document.querySelector('header');
@@ -93,4 +103,71 @@ window.addEventListener('scroll', () => {
         header.style.backgroundColor = 'transparent';
         header.style.transition = 'background-color 0.3s ease';
     }
+});
+
+/* Chat widget toggle */
+const chatToggle = document.getElementById('chat-toggle');
+const chatBox = document.getElementById('chat-box');
+const chatMessages = document.getElementById('chat-messages');
+const chatForm = document.getElementById('chat-form');
+const chatInput = document.getElementById('chat-input');
+
+chatToggle.addEventListener('click', () => {
+    const expanded = chatToggle.getAttribute('aria-expanded') === 'true';
+    chatToggle.setAttribute('aria-expanded', !expanded);
+    if (expanded) {
+        chatBox.hidden = true;
+    } else {
+        chatBox.hidden = false;
+        chatInput.focus();
+    }
+});
+
+/* Simple mock AI chat logic for Lexus */
+const lexusResponses = [
+    "Hi! I'm Lexus, your virtual assistant. How can I help you today?",
+    "That's great to hear! Can you tell me more about your car?",
+    "We offer premium detailing services including exterior, interior, and paint correction.",
+    "Would you like to schedule an appointment or get a quote?",
+    "Thank you for chatting with me! I'll send your message to Jay, the owner."
+];
+
+let chatStep = 0;
+
+function addMessage(text, sender) {
+    const msgDiv = document.createElement('div');
+    msgDiv.classList.add('chat-message', sender);
+    msgDiv.textContent = text;
+    chatMessages.appendChild(msgDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function sendEmailSimulation(chatTranscript) {
+    // Simulate sending email to skillzautorevival@icloud.com
+    console.log("Sending chat transcript to skillzautorevival@icloud.com:");
+    console.log(chatTranscript);
+    alert("Your conversation has been sent to Skillz Auto Revival owner. Thank you!");
+}
+
+chatForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const userInput = chatInput.value.trim();
+    if (!userInput) return;
+
+    addMessage(userInput, 'user');
+    chatInput.value = '';
+
+    setTimeout(() => {
+        if (chatStep < lexusResponses.length) {
+            addMessage(lexusResponses[chatStep], 'bot');
+            chatStep++;
+            if (chatStep === lexusResponses.length) {
+                // After last message, simulate sending email
+                let transcript = Array.from(chatMessages.children).map(div => div.textContent).join('\n');
+                sendEmailSimulation(transcript);
+                chatStep = 0; // reset chat
+                chatMessages.innerHTML = ''; // clear chat
+            }
+        }
+    }, 1000);
 });
