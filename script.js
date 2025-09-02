@@ -15,23 +15,47 @@ document.querySelectorAll('nav a').forEach(anchor => {
 // Form submission handling with validation and feedback
 document.getElementById('contact-form').addEventListener('submit', function(e) {
     e.preventDefault();
-    
-    const name = document.getElementById('name').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const message = document.getElementById('message').value.trim();
-    
-    if (!name || !email || !message) {
-        alert('Please fill in all fields.');
+
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const messageInput = document.getElementById('message');
+
+    const name = nameInput.value.trim();
+    const email = emailInput.value.trim();
+    const message = messageInput.value.trim();
+
+    let valid = true;
+
+    // Clear previous error messages
+    document.getElementById('name-error').textContent = '';
+    document.getElementById('email-error').textContent = '';
+    document.getElementById('message-error').textContent = '';
+
+    if (!name) {
+        document.getElementById('name-error').textContent = 'Please enter your name.';
+        valid = false;
+    }
+
+    if (!email) {
+        document.getElementById('email-error').textContent = 'Please enter your email.';
+        valid = false;
+    } else {
+        const emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+        if (!emailPattern.test(email)) {
+            document.getElementById('email-error').textContent = 'Please enter a valid email address.';
+            valid = false;
+        }
+    }
+
+    if (!message) {
+        document.getElementById('message-error').textContent = 'Please enter your message.';
+        valid = false;
+    }
+
+    if (!valid) {
         return;
     }
-    
-    // Basic email format validation
-    const emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
-    if (!emailPattern.test(email)) {
-        alert('Please enter a valid email address.');
-        return;
-    }
-    
+
     alert('Thank you for your message! We will get back to you soon.');
     this.reset();
 });
